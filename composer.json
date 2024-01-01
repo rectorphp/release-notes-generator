@@ -1,5 +1,6 @@
 {
     "name": "rector/release-notes-generator",
+    "license": "MIT",
     "bin": [
         "bin/rng.php"
     ],
