@@ -1,5 +1,6 @@
 # Release Notes Generator
 
+The way we generate release notes for Rector repository - https://github.com/rectorphp/rector/releases/
 
 ## Install
 
