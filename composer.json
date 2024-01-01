@@ -38,5 +38,8 @@
         "check-cs": "vendor/bin/ecs check --ansi",
         "fix-cs": "vendor/bin/ecs check --fix --ansi",
         "phpstan": "vendor/bin/phpstan analyse --ansi --error-format symplify"
+    },
+    "require": {
+        "webmozart/assert": "^1.11"
     }
 }
