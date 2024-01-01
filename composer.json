@@ -1,10 +1,11 @@
 {
     "name": "rector/release-notes-generator",
     "license": "MIT",
+    "description": "The way we generate release notes for Rector repository",
     "bin": [
         "bin/rng.php"
     ],
-    "requires": {
+    "require": {
         "php": "^8.1",
         "symfony/console": "^6.4",
         "illuminate/container": "^10.0",
@@ -38,8 +39,5 @@
         "check-cs": "vendor/bin/ecs check --ansi",
         "fix-cs": "vendor/bin/ecs check --fix --ansi",
         "phpstan": "vendor/bin/phpstan analyse --ansi --error-format symplify"
-    },
-    "require": {
-        "webmozart/assert": "^1.11"
     }
 }
