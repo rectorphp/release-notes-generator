@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Rector\Utils\ChangelogGenerator\Exception;
+namespace Rector\ReleaseNotesGenerator\Exception;
 
 use Exception;
 

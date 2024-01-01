@@ -2,15 +2,15 @@
 
 declare(strict_types=1);
 
-namespace Rector\Utils\ChangelogGenerator\Command;
+namespace Rector\ReleaseNotesGenerator\Command;
 
 use Nette\Utils\FileSystem;
 use Nette\Utils\Strings;
-use Rector\Utils\ChangelogGenerator\Changelog\ChangelogContentsFactory;
-use Rector\Utils\ChangelogGenerator\Enum\Option;
-use Rector\Utils\ChangelogGenerator\Enum\RepositoryName;
-use Rector\Utils\ChangelogGenerator\GithubApiCaller;
-use Rector\Utils\ChangelogGenerator\GitResolver;
+use Rector\ReleaseNotesGenerator\Changelog\ChangelogContentsFactory;
+use Rector\ReleaseNotesGenerator\Enum\Option;
+use Rector\ReleaseNotesGenerator\Enum\RepositoryName;
+use Rector\ReleaseNotesGenerator\GithubApiCaller;
+use Rector\ReleaseNotesGenerator\GitResolver;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;

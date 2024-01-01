@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Rector\Utils\ChangelogGenerator;
+namespace Rector\ReleaseNotesGenerator;
 
-use Rector\Utils\ChangelogGenerator\ValueObject\Commit;
+use Rector\ReleaseNotesGenerator\ValueObject\Commit;
 use Symfony\Component\Process\Process;
 
 final class GitResolver

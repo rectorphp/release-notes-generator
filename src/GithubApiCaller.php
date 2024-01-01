@@ -2,14 +2,14 @@
 
 declare(strict_types=1);
 
-namespace Rector\Utils\ChangelogGenerator;
+namespace Rector\ReleaseNotesGenerator;
 
 use Httpful\Request;
 use Httpful\Response;
 use InvalidArgumentException;
-use Rector\Utils\ChangelogGenerator\Enum\RepositoryName;
-use Rector\Utils\ChangelogGenerator\Exception\GithubRequestException;
-use Rector\Utils\ChangelogGenerator\ValueObject\Commit;
+use Rector\ReleaseNotesGenerator\Enum\RepositoryName;
+use Rector\ReleaseNotesGenerator\Exception\GithubRequestException;
+use Rector\ReleaseNotesGenerator\ValueObject\Commit;
 use stdClass;
 
 final class GithubApiCaller

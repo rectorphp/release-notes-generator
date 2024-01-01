@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Rector\Utils\ChangelogGenerator\Changelog;
+namespace Rector\ReleaseNotesGenerator\Changelog;
 
-use Rector\Utils\ChangelogGenerator\Enum\ChangelogCategory;
+use Rector\ReleaseNotesGenerator\Enum\ChangelogCategory;
 use Webmozart\Assert\Assert;
 
 /**

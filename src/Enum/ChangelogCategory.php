@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Rector\Utils\ChangelogGenerator\Enum;
+namespace Rector\ReleaseNotesGenerator\Enum;
 
 final class ChangelogCategory
 {

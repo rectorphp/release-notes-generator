@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Rector\Utils\Tests\ChangelogGenerator\Changelog;
 
 use PHPUnit\Framework\TestCase;
-use Rector\Utils\ChangelogGenerator\Changelog\ChangelogContentsFactory;
+use Rector\ReleaseNotesGenerator\Changelog\ChangelogContentsFactory;
 
 final class ChangelogContentsFactoryTest extends TestCase
 {

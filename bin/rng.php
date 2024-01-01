@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-use Rector\Utils\ChangelogGenerator\Changelog\ChangelogContentsFactory;
-use Rector\Utils\ChangelogGenerator\Command\GenerateChangelogCommand;
-use Rector\Utils\ChangelogGenerator\GithubApiCaller;
-use Rector\Utils\ChangelogGenerator\GitResolver;
+use Rector\ReleaseNotesGenerator\Changelog\ChangelogContentsFactory;
+use Rector\ReleaseNotesGenerator\Command\GenerateChangelogCommand;
+use Rector\ReleaseNotesGenerator\GithubApiCaller;
+use Rector\ReleaseNotesGenerator\GitResolver;
 use Symfony\Component\Console\Application;
 
 require __DIR__ . '/../vendor/autoload.php';

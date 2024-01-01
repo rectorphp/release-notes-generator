@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Rector\Utils\ChangelogGenerator\ValueObject;
+namespace Rector\ReleaseNotesGenerator\ValueObject;
 
 final class Commit
 {
