@@ -15,6 +15,7 @@ use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
+use Webmozart\Assert\Assert;
 
 final class GenerateCommand extends Command
 {
@@ -39,15 +40,18 @@ final class GenerateCommand extends Command
 
     protected function configure(): void
     {
-        $this->setName('generate-changelog');
+        $this->setName('generate');
         $this->addOption(Option::FROM_COMMIT, null, InputOption::VALUE_REQUIRED);
         $this->addOption(Option::TO_COMMIT, null, InputOption::VALUE_REQUIRED);
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        $fromCommit = (string) $input->getArgument(Option::FROM_COMMIT);
-        $toCommit = (string) $input->getArgument(Option::TO_COMMIT);
+        $fromCommit = (string) $input->getOption(Option::FROM_COMMIT);
+        Assert::notEmpty($fromCommit);
+
+        $toCommit = (string) $input->getOption(Option::TO_COMMIT);
+        Assert::notEmpty($toCommit);
 
         $commits = $this->gitResolver->resolveCommitLinesFromToHashes($fromCommit, $toCommit);
 
