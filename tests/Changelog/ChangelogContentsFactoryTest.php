@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Rector\Utils\Tests\ChangelogGenerator\Changelog;
+namespace Rector\ReleaseNotesGenerator\Tests\Changelog;
 
 use PHPUnit\Framework\TestCase;
 use Rector\ReleaseNotesGenerator\Changelog\ChangelogContentsFactory;

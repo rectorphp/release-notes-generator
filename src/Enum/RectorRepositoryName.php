@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Rector\ReleaseNotesGenerator\Enum;
 
-final class RepositoryName
+final class RectorRepositoryName
 {
     /**
      * @var string

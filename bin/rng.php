@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 use Rector\ReleaseNotesGenerator\Changelog\ChangelogContentsFactory;
-use Rector\ReleaseNotesGenerator\Command\GenerateChangelogCommand;
+use Rector\ReleaseNotesGenerator\Command\GenerateCommand;
 use Rector\ReleaseNotesGenerator\GithubApiCaller;
 use Rector\ReleaseNotesGenerator\GitResolver;
 use Symfony\Component\Console\Application;
@@ -13,9 +13,10 @@ require __DIR__ . '/../vendor/autoload.php';
 $githubToken = getenv('GITHUB_TOKEN');
 $githubApiCaller = new GithubApiCaller($githubToken);
 
-// @todo
+$container = new Illuminate\Container\Container();
+$generateChangelogCommand = $container->make(GenerateCommand::class);
 
-$generateChangelogCommand = new GenerateChangelogCommand(
+$generateChangelogCommand = new GenerateCommand(
     new GitResolver(),
     $githubApiCaller,
     new ChangelogContentsFactory()

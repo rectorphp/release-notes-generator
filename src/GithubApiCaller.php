@@ -7,7 +7,7 @@ namespace Rector\ReleaseNotesGenerator;
 use Httpful\Request;
 use Httpful\Response;
 use InvalidArgumentException;
-use Rector\ReleaseNotesGenerator\Enum\RepositoryName;
+use Rector\ReleaseNotesGenerator\Enum\RectorRepositoryName;
 use Rector\ReleaseNotesGenerator\Exception\GithubRequestException;
 use Rector\ReleaseNotesGenerator\ValueObject\Commit;
 use stdClass;
@@ -28,7 +28,7 @@ final class GithubApiCaller
     {
         $requestUri = sprintf(
             'https://api.github.com/search/issues?q=repo:%s+%s+is:issue',
-            RepositoryName::DEPLOY,
+            RectorRepositoryName::DEPLOY,
             $commit->getHash()
         );
 
@@ -39,7 +39,7 @@ final class GithubApiCaller
     {
         $requestUri = sprintf(
             'https://api.github.com/search/issues?q=repo:%s+%s+is:pull-request',
-            RepositoryName::DEVELOPMENT,
+            RectorRepositoryName::DEVELOPMENT,
             $commit->getHash()
         );
 
