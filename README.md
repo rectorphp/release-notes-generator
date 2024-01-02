@@ -19,5 +19,5 @@ composer install rector/release-notes-generator --dev
 2. Run the command:
 
 ```bash
-GITHUB_TOKEN=<github_token> vendor/bin/rng --from-commit <from-commit-hash> --to-commit <to-commit-hash>
+GITHUB_TOKEN=<github_token> vendor/bin/rng --from-commit <commit-hash> --to-commit <commit-hash>
 ```
