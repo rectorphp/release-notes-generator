@@ -10,6 +10,8 @@ The way we generate release notes for Rector repository - https://github.com/rec
 composer install rector/release-notes-generator --dev
 ```
 
+<br>
+
 ## Usage
 
 1. Generate Github token here: https://github.com/settings/tokens/new
