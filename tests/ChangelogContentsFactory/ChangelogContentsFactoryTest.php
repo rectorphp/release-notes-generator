@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace Rector\ReleaseNotesGenerator\Tests\Changelog;
+namespace Rector\ReleaseNotesGenerator\Tests\ChangelogContentsFactory;
 
 use PHPUnit\Framework\TestCase;
-use Rector\ReleaseNotesGenerator\Changelog\ChangelogContentsFactory;
+use Rector\ReleaseNotesGenerator\ChangelogContentsFactory;
 
 final class ChangelogContentsFactoryTest extends TestCase
 {

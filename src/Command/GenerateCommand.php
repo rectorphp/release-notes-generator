@@ -6,7 +6,7 @@ namespace Rector\ReleaseNotesGenerator\Command;
 
 use Nette\Utils\FileSystem;
 use Nette\Utils\Strings;
-use Rector\ReleaseNotesGenerator\Changelog\ChangelogContentsFactory;
+use Rector\ReleaseNotesGenerator\ChangelogContentsFactory;
 use Rector\ReleaseNotesGenerator\Enum\Option;
 use Rector\ReleaseNotesGenerator\Enum\RectorRepositoryName;
 use Rector\ReleaseNotesGenerator\GithubApiCaller;
