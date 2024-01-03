@@ -8,9 +8,10 @@ use Rector\Set\ValueObject\SetList;
 return static function (RectorConfig $rectorConfig): void {
     $rectorConfig->importNames();
 
-    $rectorConfig->paths([__DIR__ . '/config', __DIR__ . '/src', __DIR__ . '/tests']);
+    $rectorConfig->paths([__DIR__ . '/bin', __DIR__ . '/src', __DIR__ . '/tests']);
 
     $rectorConfig->sets([
+        \Rector\Set\ValueObject\LevelSetList::UP_TO_PHP_82,
         SetList::INSTANCEOF,
         SetList::NAMING,
         SetList::TYPE_DECLARATION,
