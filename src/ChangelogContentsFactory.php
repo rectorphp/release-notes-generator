@@ -7,6 +7,9 @@ namespace Rector\ReleaseNotesGenerator;
 use Rector\ReleaseNotesGenerator\Enum\ChangelogCategory;
 use Webmozart\Assert\Assert;
 
+/**
+ * @see \Rector\ReleaseNotesGenerator\Tests\ChangelogContentsFactory\ChangelogContentsFactoryTest
+ */
 final class ChangelogContentsFactory
 {
     /**
