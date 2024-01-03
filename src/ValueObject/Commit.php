@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace Rector\ReleaseNotesGenerator\ValueObject;
 
-final class Commit
+final readonly class Commit
 {
     public function __construct(
-        private readonly string $hash,
-        private readonly string $message
+        private string $hash,
+        private string $message
     ) {
     }
 

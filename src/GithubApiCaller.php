@@ -12,10 +12,10 @@ use Rector\ReleaseNotesGenerator\Exception\GithubRequestException;
 use Rector\ReleaseNotesGenerator\ValueObject\Commit;
 use stdClass;
 
-final class GithubApiCaller
+final readonly class GithubApiCaller
 {
     public function __construct(
-        private readonly string|false $githubToken
+        private string|false $githubToken
     ) {
         if ($githubToken === false) {
             throw new InvalidArgumentException(

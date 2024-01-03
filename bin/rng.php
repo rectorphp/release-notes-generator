@@ -2,13 +2,14 @@
 
 declare(strict_types=1);
 
+use Illuminate\Container\Container;
 use Rector\ReleaseNotesGenerator\Command\GenerateCommand;
 use Rector\ReleaseNotesGenerator\GithubApiCaller;
 use Symfony\Component\Console\Application;
 
 require __DIR__ . '/../vendor/autoload.php';
 
-$container = new \Illuminate\Container\Container();
+$container = new Container();
 $container->when(GithubApiCaller::class)
     ->needs('$githubToken')
     ->give(getenv('GITHUB_TOKEN'));
