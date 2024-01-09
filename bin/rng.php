@@ -21,6 +21,7 @@ foreach ($possibleAutoloadPaths as $possibleAutoloadPath) {
     }
 }
 
+
 $container = new Container();
 $container->when(GithubApiCaller::class)
     ->needs('$githubToken')

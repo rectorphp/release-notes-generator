@@ -15,7 +15,7 @@ use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
-use Webmozart\Assert\Assert;
+use Symfony\Component\Console\Style\SymfonyStyle;
 
 final class GenerateCommand extends Command
 {
@@ -43,15 +43,32 @@ final class GenerateCommand extends Command
         $this->setName('generate');
         $this->addOption(Option::FROM_COMMIT, null, InputOption::VALUE_REQUIRED);
         $this->addOption(Option::TO_COMMIT, null, InputOption::VALUE_REQUIRED);
+        $this->addOption(Option::GITHUB_TOKEN, null, InputOption::VALUE_REQUIRED);
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
+        $symfonyStyle = new SymfonyStyle($input, $output);
+
         $fromCommit = (string) $input->getOption(Option::FROM_COMMIT);
-        Assert::notEmpty($fromCommit);
+        if ($fromCommit === '') {
+            $symfonyStyle->error('Option "--from-commit" is required');
+            return self::FAILURE;
+        }
 
         $toCommit = (string) $input->getOption(Option::TO_COMMIT);
-        Assert::notEmpty($toCommit);
+        if ($toCommit === '') {
+            $symfonyStyle->error('Option "--to-commit" is required');
+            return self::FAILURE;
+        }
+
+        $githubToken = (string) $input->getOption(Option::GITHUB_TOKEN);
+        if ($githubToken === '') {
+            $symfonyStyle->error(
+                'Option "--github-token" is required. Get your token here: https://github.com/settings/tokens/new'
+            );
+            return self::FAILURE;
+        }
 
         $commits = $this->gitResolver->resolveCommitLinesFromToHashes($fromCommit, $toCommit);
 
@@ -60,8 +77,8 @@ final class GenerateCommand extends Command
         $changelogLines = [];
 
         foreach ($commits as $commit) {
-            $searchPullRequestsResponse = $this->githubApiCaller->searchPullRequests($commit);
-            $searchIssuesResponse = $this->githubApiCaller->searchIssues($commit);
+            $searchPullRequestsResponse = $this->githubApiCaller->searchPullRequests($commit, $githubToken);
+            $searchIssuesResponse = $this->githubApiCaller->searchIssues($commit, $githubToken);
 
             $items = array_merge($searchPullRequestsResponse->items, $searchIssuesResponse->items);
             $parenthesis = 'https://github.com/' . RectorRepositoryName::DEVELOPMENT . '/commit/' . $commit->getHash();
