@@ -7,7 +7,7 @@ The way we generate release notes for Rector repository - https://github.com/rec
 ## Install
 
 ```bash
-composer install rector/release-notes-generator --dev
+composer require rector/release-notes-generator --dev
 ```
 
 <br>
