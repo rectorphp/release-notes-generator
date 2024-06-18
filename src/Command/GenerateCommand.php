@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace Rector\ReleaseNotesGenerator\Command;
 
-use Nette\Utils\FileSystem;
-use Nette\Utils\Strings;
 use Rector\ReleaseNotesGenerator\ChangelogContentsFactory;
 use Rector\ReleaseNotesGenerator\Enum\Option;
 use Rector\ReleaseNotesGenerator\Enum\RectorRepositoryName;
@@ -101,7 +99,7 @@ final class GenerateCommand extends Command
             }
 
             // clean commit from duplicating issue number
-            $commitMatch = Strings::match($commit->getMessage(), self::ISSUE_NAME_REGEX);
+            preg_match(self::ISSUE_NAME_REGEX, $commit->getMessage(), $commitMatch);
 
             $commit = $commitMatch[1] ?? $commit->getMessage();
 
@@ -130,7 +128,7 @@ final class GenerateCommand extends Command
 
         $filePath = getcwd() . '/generated-release-notes.md';
 
-        FileSystem::write($filePath, $releaseChangelogContents);
+        file_put_contents($filePath, $releaseChangelogContents);
         $output->write(sprintf('Release notes dumped into "%s" file', $filePath));
 
         return self::SUCCESS;
