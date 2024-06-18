@@ -5,8 +5,3 @@ parameters:
         - bin
         - src
         - tests
-
-    ignoreErrors:
-        -
-            message: '#Parameter \#1 \$implementation of method Illuminate\\Contracts\\Container\\ContextualBindingBuilder\:\:give\(\) expects array\|Closure\|string, string\|false given#'
-            path: bin/rng.php

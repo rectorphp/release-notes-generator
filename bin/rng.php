@@ -2,9 +2,10 @@
 
 declare(strict_types=1);
 
-use Illuminate\Container\Container;
+use Rector\ReleaseNotesGenerator\ChangelogContentsFactory;
 use Rector\ReleaseNotesGenerator\Command\GenerateCommand;
 use Rector\ReleaseNotesGenerator\GithubApiCaller;
+use Rector\ReleaseNotesGenerator\GitResolver;
 use Symfony\Component\Console\Application;
 
 $possibleAutoloadPaths = [
@@ -21,17 +22,14 @@ foreach ($possibleAutoloadPaths as $possibleAutoloadPath) {
     }
 }
 
+$gitResolver = new GitResolver();
+$githubApiCaller = new GithubApiCaller();
+$changelogContentsFactory = new ChangelogContentsFactory();
 
-$container = new Container();
-$container->when(GithubApiCaller::class)
-    ->needs('$githubToken')
-    ->give(getenv('GITHUB_TOKEN'));
-
-
-$generateChangelogCommand = $container->make(GenerateCommand::class);
+$generateCommand = new GenerateCommand($gitResolver, $githubApiCaller, $changelogContentsFactory);
 
 $application = new Application();
-$application->add($generateChangelogCommand);
+$application->add($generateCommand);
 $application->setDefaultCommand('generate', true);
 
 exit($application->run());
