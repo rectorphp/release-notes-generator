@@ -25,4 +25,9 @@ final class Option
      * @var string
      */
     public const REMOTE_REPOSITORY = 'remote-repository';
+
+    /**
+     * @var string
+     */
+    public const REMOTE_ONLY = 'remote-only';
 }

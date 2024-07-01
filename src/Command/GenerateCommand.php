@@ -12,6 +12,7 @@ use Rector\ReleaseNotesGenerator\Enum\Option;
 use Rector\ReleaseNotesGenerator\Exception\InvalidConfigurationException;
 use Rector\ReleaseNotesGenerator\GithubApiCaller;
 use Rector\ReleaseNotesGenerator\GitResolver;
+use Rector\ReleaseNotesGenerator\ValueObject\Commit;
 use Rector\ReleaseNotesGenerator\ValueObject\ExternalRepositoryChangelog;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
@@ -45,6 +46,8 @@ final class GenerateCommand extends Command
             InputOption::VALUE_REQUIRED | InputOption::VALUE_IS_ARRAY,
             'Remote repository (use multiple values)'
         );
+
+        $this->addOption(Option::REMOTE_ONLY, null, InputOption::VALUE_NONE, 'Show only remote repositories');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int
@@ -70,75 +73,32 @@ final class GenerateCommand extends Command
             return self::FAILURE;
         }
 
-        $externalRepositoryChangelogs = [];
+        $externalRepositoryChangelogs = $this->resolveExternalRepositoryChangelogs($commits, $configuration);
 
-        if ($configuration->hasRemoteRepositories()) {
-            // process remote repositories by date first
-            $startCommit = $commits[array_key_first($commits)];
-            $endCommit = $commits[array_key_last($commits)];
+        if ($configuration->isRemoteOnly()) {
+            $releaseChangelogContents = '';
+        } else {
+            $i = 0;
 
-            foreach ($configuration->getRemoteRepositories() as $remoteRepository) {
+            $changelogLines = [];
+            foreach ($commits as $commit) {
+                $changelogLine = $this->changelogLineFactory->create($commit, $configuration);
 
-                $foundPullRequests = $this->githubApiCaller->findRepositoryPullRequestsBetweenDates(
-                    $remoteRepository,
-                    $configuration->getGithubToken(),
-                    $startCommit->getDate(),
-                    $endCommit->getDate()
-                );
+                // just to show the script is doing something :)
+                $this->symfonyStyle->writeln($changelogLine);
 
-                // nothing to process
-                if ($foundPullRequests->total_count === 0) {
-                    continue;
+                $changelogLines[] = $changelogLine;
+
+                // not to throttle the GitHub API
+                if ($i > 0 && $i % 8 === 0) {
+                    sleep(60);
                 }
 
-                $externalChangelogLines = [];
-
-                foreach ($foundPullRequests->items as $foundPullRequest) {
-                    $username = $foundPullRequest->user->login;
-                    $pullRequestUrl = $foundPullRequest->pull_request->url;
-
-                    $changelogLine = sprintf(
-                        '* %s ([#%s](%s))',
-                        $foundPullRequest->title,
-                        $foundPullRequest->number,
-                        $pullRequestUrl
-                    );
-
-                    if (! in_array($username, Configuration::EXCLUDED_THANKS_NAMES, true)) {
-                        $changelogLine .= ', Thanks @' . $username;
-                    }
-
-                    $externalChangelogLines[] = $changelogLine;
-                }
-
-                $externalRepositoryChangelogs[] = new ExternalRepositoryChangelog(
-                    $remoteRepository,
-                    $externalChangelogLines
-                );
-            }
-        }
-
-        $i = 0;
-
-        $changelogLines = [];
-
-        foreach ($commits as $commit) {
-            $changelogLine = $this->changelogLineFactory->create($commit, $configuration);
-
-            // just to show the script is doing something :)
-            $this->symfonyStyle->writeln($changelogLine);
-
-            $changelogLines[] = $changelogLine;
-
-            // not to throttle the GitHub API
-            if ($i > 0 && $i % 8 === 0) {
-                sleep(60);
+                ++$i;
             }
 
-            ++$i;
+            $releaseChangelogContents = $this->changelogContentsFactory->create($changelogLines);
         }
-
-        $releaseChangelogContents = $this->changelogContentsFactory->create($changelogLines);
 
         foreach ($externalRepositoryChangelogs as $externalRepositoryChangelog) {
             $releaseChangelogContents .= PHP_EOL . PHP_EOL;
@@ -156,5 +116,45 @@ final class GenerateCommand extends Command
         file_put_contents($filePath, $releaseChangelogContents);
 
         $this->symfonyStyle->writeln(sprintf('Release notes dumped into "%s" file', $filePath));
+    }
+
+    /**
+     * @param Commit[] $commits
+     * @return ExternalRepositoryChangelog[]
+     */
+    private function resolveExternalRepositoryChangelogs(array $commits, Configuration $configuration): array
+    {
+        if (! $configuration->hasRemoteRepositories()) {
+            return [];
+        }
+
+        $externalRepositoryChangelogs = [];
+
+        // process remote repositories by date first
+        $startCommit = $commits[array_key_first($commits)];
+        $endCommit = $commits[array_key_last($commits)];
+
+        foreach ($configuration->getRemoteRepositories() as $remoteRepository) {
+            $foundPullRequests = $this->githubApiCaller->findRepositoryPullRequestsBetweenDates(
+                $remoteRepository,
+                $configuration->getGithubToken(),
+                $startCommit->getDate(),
+                $endCommit->getDate()
+            );
+
+            // nothing to process
+            if ($foundPullRequests->total_count === 0) {
+                continue;
+            }
+
+            $externalChangelogLines = $this->changelogLineFactory->createFromPullRequests($foundPullRequests);
+
+            $externalRepositoryChangelogs[] = new ExternalRepositoryChangelog(
+                $remoteRepository,
+                $externalChangelogLines
+            );
+        }
+
+        return $externalRepositoryChangelogs;
     }
 }

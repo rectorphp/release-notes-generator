@@ -31,7 +31,7 @@ final class ExternalRepositoryChangelog
 
     public function toString(): string
     {
-        $changelogContents = '## ' . $this->title;
+        $changelogContents = '## ' . $this->title . PHP_EOL . PHP_EOL;
         $changelogContents .= implode(PHP_EOL, $this->lines);
         $changelogContents .= PHP_EOL . PHP_EOL;
 

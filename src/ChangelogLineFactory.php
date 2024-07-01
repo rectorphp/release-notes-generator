@@ -7,6 +7,7 @@ namespace Rector\ReleaseNotesGenerator;
 use Rector\ReleaseNotesGenerator\Configuration\Configuration;
 use Rector\ReleaseNotesGenerator\Enum\RectorRepositoryName;
 use Rector\ReleaseNotesGenerator\ValueObject\Commit;
+use stdClass;
 
 final class ChangelogLineFactory
 {
@@ -19,6 +20,19 @@ final class ChangelogLineFactory
     public function __construct(
         private readonly GithubApiCaller $githubApiCaller
     ) {
+    }
+
+    /**
+     * @return string[]
+     */
+    public function createFromPullRequests(stdClass $pullRequests): array
+    {
+        $changelogLines = [];
+        foreach ($pullRequests->items as $foundPullRequest) {
+            $changelogLines[] = $this->createFromPullRequest($foundPullRequest);
+        }
+
+        return $changelogLines;
     }
 
     public function create(Commit $commit, Configuration $configuration): string
@@ -61,6 +75,23 @@ final class ChangelogLineFactory
             $issuesToReference !== [] ? ', ' . implode(', ', $issuesToReference) : '',
             $this->createThanks($thanks)
         );
+    }
+
+    private function createFromPullRequest(stdClass $pullRequest): string
+    {
+        $changelogLine = sprintf(
+            '* %s ([#%s](%s))',
+            $pullRequest->title,
+            $pullRequest->number,
+            $pullRequest->pull_request->html_url
+        );
+
+        $username = $pullRequest->user->login;
+        if (! in_array($username, Configuration::EXCLUDED_THANKS_NAMES, true)) {
+            $changelogLine .= ', Thanks @' . $username;
+        }
+
+        return $changelogLine;
     }
 
     private function createThanks(string|null $thanks): string

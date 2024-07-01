@@ -20,7 +20,8 @@ final class Configuration
         private string $fromCommit,
         private string $toCommit,
         private string $githubToken,
-        private array $remoteRepositories
+        private array $remoteRepositories,
+        private bool $isRemoteOnly
     ) {
         Assert::allString($remoteRepositories);
     }
@@ -51,5 +52,10 @@ final class Configuration
     public function getRemoteRepositories(): array
     {
         return $this->remoteRepositories;
+    }
+
+    public function isRemoteOnly(): bool
+    {
+        return $this->isRemoteOnly;
     }
 }

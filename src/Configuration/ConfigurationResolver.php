@@ -29,7 +29,9 @@ final class ConfigurationResolver
             );
         }
 
+        $isRemoteOnly = (bool) $input->getOption(Option::REMOTE_ONLY);
+
         $remoteRepositories = (array) $input->getOption(Option::REMOTE_REPOSITORY);
-        return new Configuration($fromCommit, $toCommit, $githubToken, $remoteRepositories);
+        return new Configuration($fromCommit, $toCommit, $githubToken, $remoteRepositories, $isRemoteOnly);
     }
 }
