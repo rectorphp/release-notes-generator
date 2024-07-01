@@ -3,6 +3,7 @@
 declare(strict_types=1);
 
 use Rector\ReleaseNotesGenerator\ChangelogContentsFactory;
+use Rector\ReleaseNotesGenerator\ChangelogLineFactory;
 use Rector\ReleaseNotesGenerator\Command\GenerateCommand;
 use Rector\ReleaseNotesGenerator\Configuration\ConfigurationResolver;
 use Rector\ReleaseNotesGenerator\GithubApiCaller;
@@ -28,11 +29,13 @@ $githubApiCaller = new GithubApiCaller();
 $changelogContentsFactory = new ChangelogContentsFactory();
 $configurationResolver = new ConfigurationResolver();
 
+$changelogLineFactory = new ChangelogLineFactory($githubApiCaller);
+
 $generateCommand = new GenerateCommand(
     $gitResolver,
-    $githubApiCaller,
     $changelogContentsFactory,
-    $configurationResolver
+    $configurationResolver,
+    $changelogLineFactory
 );
 
 $application = new Application();
