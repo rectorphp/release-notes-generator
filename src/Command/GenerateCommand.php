@@ -130,7 +130,7 @@ final class GenerateCommand extends Command
             if (property_exists($item, 'pull_request') && $item->pull_request !== null) {
                 $parenthesis = sprintf(
                     '[#%d](%s)',
-                    (int)$item->number,
+                    (int) $item->number,
                     'https://github.com/' . RectorRepositoryName::DEVELOPMENT . '/pull/' . $item->number
                 );
                 $thanks = $item->user->login;
@@ -147,7 +147,7 @@ final class GenerateCommand extends Command
 
         return sprintf(
             '* %s (%s)%s%s',
-            (string)$commit,
+            (string) $commit,
             $parenthesis,
             $issuesToReference !== [] ? ', ' . implode(', ', $issuesToReference) : '',
             $this->createThanks($thanks)
