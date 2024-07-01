@@ -157,14 +157,4 @@ final class GenerateCommand extends Command
 
         $this->symfonyStyle->writeln(sprintf('Release notes dumped into "%s" file', $filePath));
     }
-
-    private function createExternalRepositoryChangelogContents(
-        ExternalRepositoryChangelog $externalRepositoriesChangelog
-    ): string {
-        $changelogContents = '## ' . $externalRepositoriesChangelog->getTitle();
-        $changelogContents .= implode(PHP_EOL, $externalRepositoriesChangelog->getLines());
-        $changelogContents .= PHP_EOL . PHP_EOL;
-
-        return $changelogContents;
-    }
 }
