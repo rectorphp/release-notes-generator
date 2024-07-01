@@ -24,8 +24,12 @@ final readonly class GithubApiCaller
         return $this->sendRequest($requestUri, $githubToken);
     }
 
-    public function findRepositoryPullRequestsBetweenDates(string $repositoryName, string $githubToken, string $startDate, string $endDate): stdClass
-    {
+    public function findRepositoryPullRequestsBetweenDates(
+        string $repositoryName,
+        string $githubToken,
+        string $startDate,
+        string $endDate
+    ): stdClass {
         $requestUri = sprintf(
             'https://api.github.com/search/issues?q=repo:%s+is:pull-request+merged:%s..%s',
             $repositoryName,

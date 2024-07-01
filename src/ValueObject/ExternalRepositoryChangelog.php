@@ -12,8 +12,7 @@ final class ExternalRepositoryChangelog
     public function __construct(
         private string $title,
         private array $lines
-    )
- {
+    ) {
 
     }
 
@@ -25,7 +24,7 @@ final class ExternalRepositoryChangelog
     /**
      * @return string[]
      */
-     public function getLines(): array
+    public function getLines(): array
     {
         return $this->lines;
     }

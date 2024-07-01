@@ -79,7 +79,6 @@ final class GenerateCommand extends Command
 
             foreach ($configuration->getRemoteRepositories() as $remoteRepository) {
 
-
                 $foundPullRequests = $this->githubApiCaller->findRepositoryPullRequestsBetweenDates(
                     $remoteRepository,
                     $configuration->getGithubToken(),
@@ -98,7 +97,8 @@ final class GenerateCommand extends Command
                     $username = $foundPullRequest->user->login;
                     $pullRequestUrl = $foundPullRequest->pull_request->url;
 
-                    $changelogLine = sprintf('* %s ([#%s](%s))',
+                    $changelogLine = sprintf(
+                        '* %s ([#%s](%s))',
                         $foundPullRequest->title,
                         $foundPullRequest->number,
                         $pullRequestUrl
@@ -111,7 +111,10 @@ final class GenerateCommand extends Command
                     $externalChangelogLines[] = $changelogLine;
                 }
 
-                $externalRepositoryChangelogs[] = new ExternalRepositoryChangelog($remoteRepository, $externalChangelogLines);
+                $externalRepositoryChangelogs[] = new ExternalRepositoryChangelog(
+                    $remoteRepository,
+                    $externalChangelogLines
+                );
             }
         }
 
@@ -155,9 +158,9 @@ final class GenerateCommand extends Command
         $this->symfonyStyle->writeln(sprintf('Release notes dumped into "%s" file', $filePath));
     }
 
-
-    private function createExternalRepositoryChangelogContents(ExternalRepositoryChangelog $externalRepositoriesChangelog): string
-    {
+    private function createExternalRepositoryChangelogContents(
+        ExternalRepositoryChangelog $externalRepositoriesChangelog
+    ): string {
         $changelogContents = '## ' . $externalRepositoriesChangelog->getTitle();
         $changelogContents .= implode(PHP_EOL, $externalRepositoriesChangelog->getLines());
         $changelogContents .= PHP_EOL . PHP_EOL;
