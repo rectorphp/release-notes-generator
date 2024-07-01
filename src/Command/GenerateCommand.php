@@ -74,7 +74,9 @@ final class GenerateCommand extends Command
         );
 
         if ($commits === []) {
-            $this->symfonyStyle->error('No commits found in the range. Just a reminder: we look into the local git repository history.');
+            $this->symfonyStyle->error(
+                'No commits found in the range. Just a reminder: we look into the local git repository history.'
+            );
             return self::FAILURE;
         }
 
