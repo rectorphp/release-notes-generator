@@ -35,7 +35,8 @@ $generateCommand = new GenerateCommand(
     $gitResolver,
     $changelogContentsFactory,
     $configurationResolver,
-    $changelogLineFactory
+    $changelogLineFactory,
+    $githubApiCaller
 );
 
 $application = new Application();

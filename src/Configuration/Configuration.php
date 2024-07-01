@@ -9,6 +9,11 @@ use Webmozart\Assert\Assert;
 final class Configuration
 {
     /**
+     * @var string[]
+     */
+    public const EXCLUDED_THANKS_NAMES = ['TomasVotruba', 'samsonasik'];
+
+    /**
      * @param string[] $remoteRepositories
      */
     public function __construct(
@@ -33,6 +38,11 @@ final class Configuration
     public function getGithubToken(): string
     {
         return $this->githubToken;
+    }
+
+    public function hasRemoteRepositories(): bool
+    {
+        return $this->remoteRepositories !== [];
     }
 
     /**

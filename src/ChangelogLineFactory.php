@@ -16,11 +16,6 @@ final class ChangelogLineFactory
      */
     private const ISSUE_NAME_REGEX = '#(.*?)( \(\#\d+\))?$#ms';
 
-    /**
-     * @var string[]
-     */
-    private const EXCLUDED_THANKS_NAMES = ['TomasVotruba', 'samsonasik'];
-
     public function __construct(
         private readonly GithubApiCaller $githubApiCaller
     ) {
@@ -74,7 +69,7 @@ final class ChangelogLineFactory
             return '';
         }
 
-        if (in_array($thanks, self::EXCLUDED_THANKS_NAMES, true)) {
+        if (in_array($thanks, Configuration::EXCLUDED_THANKS_NAMES, true)) {
             return '';
         }
 

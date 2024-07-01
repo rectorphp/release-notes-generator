@@ -6,10 +6,13 @@ namespace Rector\ReleaseNotesGenerator\Command;
 
 use Rector\ReleaseNotesGenerator\ChangelogContentsFactory;
 use Rector\ReleaseNotesGenerator\ChangelogLineFactory;
+use Rector\ReleaseNotesGenerator\Configuration\Configuration;
 use Rector\ReleaseNotesGenerator\Configuration\ConfigurationResolver;
 use Rector\ReleaseNotesGenerator\Enum\Option;
 use Rector\ReleaseNotesGenerator\Exception\InvalidConfigurationException;
+use Rector\ReleaseNotesGenerator\GithubApiCaller;
 use Rector\ReleaseNotesGenerator\GitResolver;
+use Rector\ReleaseNotesGenerator\ValueObject\ExternalRepositoryChangelog;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
@@ -25,6 +28,7 @@ final class GenerateCommand extends Command
         private readonly ChangelogContentsFactory $changelogContentsFactory,
         private readonly ConfigurationResolver $configurationResolver,
         private readonly ChangelogLineFactory $changelogLineFactory,
+        private readonly GithubApiCaller $githubApiCaller,
     ) {
         parent::__construct();
     }
@@ -66,14 +70,50 @@ final class GenerateCommand extends Command
             return self::FAILURE;
         }
 
-        // process remote repositories by date first
-        $startCommit = $commits[array_key_first($commits)];
-        $endCommit = $commits[array_key_last($commits)];
+        $externalRepositoryChangelogs = [];
 
-        dump($startCommit->getDate());
-        dump($endCommit->getDate());
+        if ($configuration->hasRemoteRepositories()) {
+            // process remote repositories by date first
+            $startCommit = $commits[array_key_first($commits)];
+            $endCommit = $commits[array_key_last($commits)];
 
-        die;
+            foreach ($configuration->getRemoteRepositories() as $remoteRepository) {
+
+
+                $foundPullRequests = $this->githubApiCaller->findRepositoryPullRequestsBetweenDates(
+                    $remoteRepository,
+                    $configuration->getGithubToken(),
+                    $startCommit->getDate(),
+                    $endCommit->getDate()
+                );
+
+                // nothing to process
+                if ($foundPullRequests->total_count === 0) {
+                    continue;
+                }
+
+                $externalChangelogLines = [];
+
+                foreach ($foundPullRequests->items as $foundPullRequest) {
+                    $username = $foundPullRequest->user->login;
+                    $pullRequestUrl = $foundPullRequest->pull_request->url;
+
+                    $changelogLine = sprintf('* %s ([#%s](%s))',
+                        $foundPullRequest->title,
+                        $foundPullRequest->number,
+                        $pullRequestUrl
+                    );
+
+                    if (! in_array($username, Configuration::EXCLUDED_THANKS_NAMES, true)) {
+                        $changelogLine .= ', Thanks @' . $username;
+                    }
+
+                    $externalChangelogLines[] = $changelogLine;
+                }
+
+                $externalRepositoryChangelogs[] = new ExternalRepositoryChangelog($remoteRepository, $externalChangelogLines);
+            }
+        }
 
         $i = 0;
 
@@ -96,6 +136,12 @@ final class GenerateCommand extends Command
         }
 
         $releaseChangelogContents = $this->changelogContentsFactory->create($changelogLines);
+
+        foreach ($externalRepositoryChangelogs as $externalRepositoryChangelog) {
+            $releaseChangelogContents .= PHP_EOL . PHP_EOL;
+            $releaseChangelogContents .= $externalRepositoryChangelog->toString();
+        }
+
         $this->printToFile($releaseChangelogContents);
 
         return self::SUCCESS;
@@ -107,5 +153,15 @@ final class GenerateCommand extends Command
         file_put_contents($filePath, $releaseChangelogContents);
 
         $this->symfonyStyle->writeln(sprintf('Release notes dumped into "%s" file', $filePath));
+    }
+
+
+    private function createExternalRepositoryChangelogContents(ExternalRepositoryChangelog $externalRepositoriesChangelog): string
+    {
+        $changelogContents = '## ' . $externalRepositoriesChangelog->getTitle();
+        $changelogContents .= implode(PHP_EOL, $externalRepositoriesChangelog->getLines());
+        $changelogContents .= PHP_EOL . PHP_EOL;
+
+        return $changelogContents;
     }
 }
