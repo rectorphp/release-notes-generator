@@ -38,7 +38,7 @@ final class GenerateCommand extends Command
         $this->addOption(
             Option::REMOTE_REPOSITORY,
             null,
-            InputOption::VALUE_REQUIRED,
+            InputOption::VALUE_REQUIRED | InputOption::VALUE_IS_ARRAY,
             'Remote repository (use multiple values)'
         );
     }
@@ -65,6 +65,15 @@ final class GenerateCommand extends Command
             );
             return self::FAILURE;
         }
+
+        // process remote repositories by date first
+        $startCommit = $commits[array_key_first($commits)];
+        $endCommit = $commits[array_key_last($commits)];
+
+        dump($startCommit->getDate());
+        dump($endCommit->getDate());
+
+        die;
 
         $i = 0;
 

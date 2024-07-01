@@ -8,7 +8,8 @@ final readonly class Commit
 {
     public function __construct(
         private string $hash,
-        private string $message
+        private string $message,
+        private string $date
     ) {
     }
 
@@ -20,5 +21,10 @@ final readonly class Commit
     public function getMessage(): string
     {
         return $this->message;
+    }
+
+    public function getDate(): string
+    {
+        return $this->date;
     }
 }

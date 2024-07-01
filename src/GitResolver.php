@@ -16,7 +16,7 @@ final class GitResolver
     {
         $commitHashRange = sprintf('%s..%s', $fromCommit, $toCommit);
 
-        $output = $this->exec(['git', 'log', $commitHashRange, '--reverse', '--pretty=%H %s']);
+        $output = $this->exec(['git', 'log', $commitHashRange, '--reverse', '--pretty=%H %s %cd', '--date=format:%Y-%m-%d']);
         $commitLines = explode("\n", $output);
 
         // remove empty values
@@ -31,8 +31,8 @@ final class GitResolver
     private function mapCommitLinesToCommits(array $commitLines): array
     {
         return array_map(static function (string $line): Commit {
-            [$hash, $message] = explode(' ', $line, 2);
-            return new Commit($hash, $message);
+            preg_match('#(?<hash>\w+) (?<message>.*?) (?<date>\d+\-\d+\-\d+)#', $line, $matches);
+            return new Commit($matches['hash'], $matches['message'], $matches['date']);
         }, $commitLines);
     }
 

@@ -29,6 +29,7 @@ final class ConfigurationResolver
             );
         }
 
-        return new Configuration($fromCommit, $toCommit, $githubToken);
+        $remoteRepositories = (array) $input->getOption(Option::REMOTE_REPOSITORY);
+        return new Configuration($fromCommit, $toCommit, $githubToken, $remoteRepositories);
     }
 }
