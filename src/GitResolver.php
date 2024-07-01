@@ -16,7 +16,9 @@ final class GitResolver
     {
         $commitHashRange = sprintf('%s..%s', $fromCommit, $toCommit);
 
-        $output = $this->exec(['git', 'log', $commitHashRange, '--reverse', '--pretty=%H %s %cd', '--date=format:%Y-%m-%d']);
+        $output = $this->exec(
+            ['git', 'log', $commitHashRange, '--reverse', '--pretty=%H %s %cd', '--date=format:%Y-%m-%d']
+        );
         $commitLines = explode("\n", $output);
 
         // remove empty values
