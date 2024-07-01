@@ -85,7 +85,7 @@ final class GenerateCommand extends Command
         $changelogLines = [];
 
         foreach ($commits as $commit) {
-            $changelogLine = $this->createChangelogLing($commit, $configuration);
+            $changelogLine = $this->createChangelogLine($commit, $configuration);
 
             // just to show the script is doing something :)
             $this->symfonyStyle->writeln($changelogLine);
@@ -119,7 +119,7 @@ final class GenerateCommand extends Command
         return sprintf(', Thanks @%s!', $thanks);
     }
 
-    private function createChangelogLing(Commit $commit, Configuration $configuration): string
+    private function createChangelogLine(Commit $commit, Configuration $configuration): string
     {
         $searchPullRequestsResponse = $this->githubApiCaller->searchPullRequests(
             $commit,
