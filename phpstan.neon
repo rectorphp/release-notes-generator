@@ -5,3 +5,6 @@ parameters:
         - bin
         - src
         - tests
+
+    ignoreErrors:
+        - '#Cannot call method writeln\(\) on Symfony\\Component\\Console\\Style\\SymfonyStyle\|null#'
