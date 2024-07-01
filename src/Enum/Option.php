@@ -20,4 +20,9 @@ final class Option
      * @var string
      */
     public const GITHUB_TOKEN = 'github-token';
+
+    /**
+     * @var string
+     */
+    public const REMOTE_REPOSITORY = 'remote-repository';
 }

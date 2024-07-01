@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 use Rector\ReleaseNotesGenerator\ChangelogContentsFactory;
 use Rector\ReleaseNotesGenerator\Command\GenerateCommand;
+use Rector\ReleaseNotesGenerator\Configuration\ConfigurationResolver;
 use Rector\ReleaseNotesGenerator\GithubApiCaller;
 use Rector\ReleaseNotesGenerator\GitResolver;
 use Symfony\Component\Console\Application;
@@ -25,8 +26,14 @@ foreach ($possibleAutoloadPaths as $possibleAutoloadPath) {
 $gitResolver = new GitResolver();
 $githubApiCaller = new GithubApiCaller();
 $changelogContentsFactory = new ChangelogContentsFactory();
+$configurationResolver = new ConfigurationResolver();
 
-$generateCommand = new GenerateCommand($gitResolver, $githubApiCaller, $changelogContentsFactory);
+$generateCommand = new GenerateCommand(
+    $gitResolver,
+    $githubApiCaller,
+    $changelogContentsFactory,
+    $configurationResolver
+);
 
 $application = new Application();
 $application->add($generateCommand);

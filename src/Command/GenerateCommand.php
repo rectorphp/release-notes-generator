@@ -5,8 +5,10 @@ declare(strict_types=1);
 namespace Rector\ReleaseNotesGenerator\Command;
 
 use Rector\ReleaseNotesGenerator\ChangelogContentsFactory;
+use Rector\ReleaseNotesGenerator\Configuration\ConfigurationResolver;
 use Rector\ReleaseNotesGenerator\Enum\Option;
 use Rector\ReleaseNotesGenerator\Enum\RectorRepositoryName;
+use Rector\ReleaseNotesGenerator\Exception\InvalidConfigurationException;
 use Rector\ReleaseNotesGenerator\GithubApiCaller;
 use Rector\ReleaseNotesGenerator\GitResolver;
 use Symfony\Component\Console\Command\Command;
@@ -32,6 +34,7 @@ final class GenerateCommand extends Command
         private readonly GitResolver $gitResolver,
         private readonly GithubApiCaller $githubApiCaller,
         private readonly ChangelogContentsFactory $changelogContentsFactory,
+        private readonly ConfigurationResolver $configurationResolver,
     ) {
         parent::__construct();
     }
@@ -42,41 +45,40 @@ final class GenerateCommand extends Command
         $this->addOption(Option::FROM_COMMIT, null, InputOption::VALUE_REQUIRED);
         $this->addOption(Option::TO_COMMIT, null, InputOption::VALUE_REQUIRED);
         $this->addOption(Option::GITHUB_TOKEN, null, InputOption::VALUE_REQUIRED);
+        $this->addOption(
+            Option::REMOTE_REPOSITORY,
+            null,
+            InputOption::VALUE_REQUIRED,
+            'Remote repository (use multiple values)'
+        );
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $symfonyStyle = new SymfonyStyle($input, $output);
 
-        $fromCommit = (string) $input->getOption(Option::FROM_COMMIT);
-        if ($fromCommit === '') {
-            $symfonyStyle->error('Option "--from-commit" is required');
+        try {
+            $configuration = $this->configurationResolver->resolve($input);
+        } catch (InvalidConfigurationException $invalidConfigurationException) {
+            $symfonyStyle->error($invalidConfigurationException->getMessage());
             return self::FAILURE;
         }
 
-        $toCommit = (string) $input->getOption(Option::TO_COMMIT);
-        if ($toCommit === '') {
-            $symfonyStyle->error('Option "--to-commit" is required');
-            return self::FAILURE;
-        }
-
-        $githubToken = (string) $input->getOption(Option::GITHUB_TOKEN);
-        if ($githubToken === '') {
-            $symfonyStyle->error(
-                'Option "--github-token" is required. Get your token here: https://github.com/settings/tokens/new'
-            );
-            return self::FAILURE;
-        }
-
-        $commits = $this->gitResolver->resolveCommitLinesFromToHashes($fromCommit, $toCommit);
+        $commits = $this->gitResolver->resolveCommitLinesFromToHashes(
+            $configuration->getFromCommit(),
+            $configuration->getToCommit()
+        );
 
         $i = 0;
 
         $changelogLines = [];
 
         foreach ($commits as $commit) {
-            $searchPullRequestsResponse = $this->githubApiCaller->searchPullRequests($commit, $githubToken);
-            $searchIssuesResponse = $this->githubApiCaller->searchIssues($commit, $githubToken);
+            $searchPullRequestsResponse = $this->githubApiCaller->searchPullRequests(
+                $commit,
+                $configuration->getGithubToken()
+            );
+            $searchIssuesResponse = $this->githubApiCaller->searchIssues($commit, $configuration->getGithubToken());
 
             $items = array_merge($searchPullRequestsResponse->items, $searchIssuesResponse->items);
             $parenthesis = 'https://github.com/' . RectorRepositoryName::DEVELOPMENT . '/commit/' . $commit->getHash();
