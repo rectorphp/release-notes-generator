@@ -9,7 +9,7 @@
     "require": {
         "php": "^8.2",
         "symfony/console": "^6.4|^7.0",
-        "nategood/httpful": "^0.3.2",
+        "nategood/httpful": "^1.0",
         "webmozart/assert": "^1.11",
         "symfony/process": "^6.4|^7.0"
     },

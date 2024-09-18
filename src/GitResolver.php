@@ -6,6 +6,7 @@ namespace Rector\ReleaseNotesGenerator;
 
 use Rector\ReleaseNotesGenerator\ValueObject\Commit;
 use Symfony\Component\Process\Process;
+use Webmozart\Assert\Assert;
 
 final class GitResolver
 {
@@ -34,6 +35,11 @@ final class GitResolver
     {
         return array_map(static function (string $line): Commit {
             preg_match('#(?<hash>\w+) (?<message>.*?) (?<date>\d+\-\d+\-\d+)#', $line, $matches);
+
+            Assert::keyExists($matches, 'hash');
+            Assert::keyExists($matches, 'message');
+            Assert::keyExists($matches, 'date');
+
             return new Commit($matches['hash'], $matches['message'], $matches['date']);
         }, $commitLines);
     }
