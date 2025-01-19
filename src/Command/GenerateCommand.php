@@ -37,6 +37,7 @@ final class GenerateCommand extends Command
     protected function configure(): void
     {
         $this->setName('generate');
+
         $this->addOption(Option::FROM_COMMIT, null, InputOption::VALUE_REQUIRED);
         $this->addOption(Option::TO_COMMIT, null, InputOption::VALUE_REQUIRED);
         $this->addOption(Option::GITHUB_TOKEN, null, InputOption::VALUE_REQUIRED);

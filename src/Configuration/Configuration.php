@@ -6,7 +6,7 @@ namespace Rector\ReleaseNotesGenerator\Configuration;
 
 use Webmozart\Assert\Assert;
 
-final class Configuration
+final readonly class Configuration
 {
     /**
      * @var string[]
