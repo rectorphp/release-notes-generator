@@ -43,7 +43,13 @@ final class ChangelogContentsFactory
         Assert::allString($changelogLines);
 
         // summarize into "Added Features" and "Bugfixes" groups
-        $linesByCategory = [];
+        $linesByCategory = [
+            // set order clearly here
+            ChangelogCategory::NEW_FEATURES => [],
+            ChangelogCategory::BUGFIXES => [],
+            ChangelogCategory::REMOVED => [],
+            ChangelogCategory::SKIPPED => [],
+        ];
 
         foreach ($changelogLines as $changelogLine) {
             foreach (self::FILTER_KEYWORDS_BY_CATEGORY as $category => $filterKeywords) {
@@ -61,6 +67,9 @@ final class ChangelogContentsFactory
 
         // remove skipped lines
         unset($linesByCategory[ChangelogCategory::SKIPPED]);
+
+        // remove empty categories
+        $linesByCategory = array_filter($linesByCategory);
 
         return $this->generateFileContentsFromGroupedItems($linesByCategory);
     }

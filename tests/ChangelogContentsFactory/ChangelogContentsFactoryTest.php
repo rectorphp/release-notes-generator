@@ -19,9 +19,10 @@ final class ChangelogContentsFactoryTest extends TestCase
     public function test(): void
     {
         $changelogLines = [
-            '* Add new rule',
             '* Fix bug',
+            '* Add new rule',
             '* Fixed another bug',
+            '* Removed old rule',
             '* Enable PHPStan on tests as well + add "unused public" ([#3238](https://github.com/rectorphp/rector-src/pull/3238))',
         ];
 

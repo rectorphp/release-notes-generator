@@ -8,3 +8,9 @@
 
 * Fix bug
 * Fixed another bug
+
+<br>
+
+## Removed :skull:
+
+* Removed old rule
