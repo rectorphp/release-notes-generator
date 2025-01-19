@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Rector\ReleaseNotesGenerator\ValueObject;
 
-final class ExternalRepositoryChangelog
+final readonly class ExternalRepositoryChangelog
 {
     /**
      * @param string[] $lines
@@ -33,8 +33,7 @@ final class ExternalRepositoryChangelog
     {
         $changelogContents = '## ' . $this->title . PHP_EOL . PHP_EOL;
         $changelogContents .= implode(PHP_EOL, $this->lines);
-        $changelogContents .= PHP_EOL . PHP_EOL;
 
-        return $changelogContents;
+        return $changelogContents . (PHP_EOL . PHP_EOL);
     }
 }

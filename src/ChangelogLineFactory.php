@@ -9,7 +9,7 @@ use Rector\ReleaseNotesGenerator\Enum\RectorRepositoryName;
 use Rector\ReleaseNotesGenerator\ValueObject\Commit;
 use stdClass;
 
-final class ChangelogLineFactory
+final readonly class ChangelogLineFactory
 {
     /**
      * @see https://regex101.com/r/jdT01W/1
@@ -18,7 +18,7 @@ final class ChangelogLineFactory
     private const ISSUE_NAME_REGEX = '#(.*?)( \(\#\d+\))?$#ms';
 
     public function __construct(
-        private readonly GithubApiCaller $githubApiCaller
+        private GithubApiCaller $githubApiCaller
     ) {
     }
 
@@ -70,7 +70,7 @@ final class ChangelogLineFactory
 
         return sprintf(
             '* %s (%s)%s%s',
-            (string) $commit,
+            $commit,
             $parenthesis,
             $issuesToReference !== [] ? ', ' . implode(', ', $issuesToReference) : '',
             $this->createThanks($thanks)

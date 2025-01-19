@@ -13,7 +13,7 @@ use Webmozart\Assert\Assert;
 final class ChangelogContentsFactory
 {
     /**
-     * @var array<string, string[]>
+     * @var array<ChangelogCategory::*, string[]>
      */
     private const FILTER_KEYWORDS_BY_CATEGORY = [
         ChangelogCategory::SKIPPED => [
@@ -26,10 +26,13 @@ final class ChangelogContentsFactory
             'update to',
             '[automated]',
             '[core]',
+            '[scope]',
+            '[scoper]',
+            '[scoped]',
         ],
         ChangelogCategory::NEW_FEATURES => ['add', 'added', 'improve'],
         ChangelogCategory::BUGFIXES => ['fixed', 'fix'],
-        ChangelogCategory::REMOVED => ['removed', 'deleted', 'remove deprecated', 'remove'],
+        ChangelogCategory::REMOVED => ['removed', 'deleted', 'remove deprecated', 'remove', 'deprecated'],
     ];
 
     /**
